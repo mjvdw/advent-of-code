@@ -1,0 +1,12 @@
+advent-of-code-data==2.0.1
+aocd==0.1
+aocd-example-parser==2023.2
+beautifulsoup4==4.12.2
+click==8.1.7
+markdown-it-py==3.0.0
+mdurl==0.1.2
+Pebble==5.0.4
+Pygments==2.17.2
+rich==13.7.0
+soupsieve==2.5
+urllib3==2.1.0
