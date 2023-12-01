@@ -15,11 +15,9 @@ def run(puzzle_code: str, send):
     data = get_data(year=year, day=day)
     c.rule(f"Advent of Code {year}-{day}{part}")
     ####################################################################################
-
-    parsed = [*data]    
     
     working = importlib.import_module(f"working.day_{day:03d}{part}")
-    answer = working.go(parsed)
+    answer = working.go(data)
 
     ####################################################################################
     c.rule("Finished")
