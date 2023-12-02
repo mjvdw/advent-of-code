@@ -3,6 +3,9 @@ import click
 from aocd import get_data, submit
 from rich.console import Console
 
+
+
+
 @click.command
 @click.argument("puzzle_code")
 @click.option('--send', default=False, help="Whether to submit the answer to AOCD")
