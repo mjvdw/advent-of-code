@@ -1,3 +1,4 @@
+import os
 import importlib
 import click
 from aocd import get_data, submit
@@ -5,15 +6,21 @@ from rich.console import Console
 
 
 @click.command
+@click.argument("year")
 @click.argument("puzzle_code")
 @click.option("--send", default=False, help="Whether to submit the answer to AOCD")
-def run(puzzle_code: str, send):
+def run(year: int, puzzle_code: str, send: bool):
     year = 2023
     day = int(puzzle_code[0:-1])
     part = puzzle_code[-1]
 
+    data = get_data(
+        session=os.getenv("AOC_SESSION"),
+        year=year,
+        day=day,
+    )
+
     c = Console()
-    data = get_data(year=year, day=day)
     c.rule(f"Advent of Code {year}-{day}{part}")
     ####################################################################################
 
