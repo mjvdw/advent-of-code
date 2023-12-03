@@ -3,14 +3,16 @@ import importlib
 import click
 from aocd import get_data, submit
 from rich.console import Console
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 @click.command
-@click.argument("year")
 @click.argument("puzzle_code")
+@click.option("--year", default=2023, help="Which year's puzzles you are referencing")
 @click.option("--send", default=False, help="Whether to submit the answer to AOCD")
-def run(year: int, puzzle_code: str, send: bool):
-    year = 2023
+def run(puzzle_code: str, year: int, send: bool):
     day = int(puzzle_code[0:-1])
     part = puzzle_code[-1]
 
