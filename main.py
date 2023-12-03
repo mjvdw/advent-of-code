@@ -4,11 +4,9 @@ from aocd import get_data, submit
 from rich.console import Console
 
 
-
-
 @click.command
 @click.argument("puzzle_code")
-@click.option('--send', default=False, help="Whether to submit the answer to AOCD")
+@click.option("--send", default=False, help="Whether to submit the answer to AOCD")
 def run(puzzle_code: str, send):
     year = 2023
     day = int(puzzle_code[0:-1])
@@ -18,8 +16,8 @@ def run(puzzle_code: str, send):
     data = get_data(year=year, day=day)
     c.rule(f"Advent of Code {year}-{day}{part}")
     ####################################################################################
-    
-    working = importlib.import_module(f"working.day_{day:03d}{part}")
+
+    working = importlib.import_module(f"{year}.day_{day:02d}{part}")
     answer = working.go(data)
 
     ####################################################################################
