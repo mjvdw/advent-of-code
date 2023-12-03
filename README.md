@@ -1,4 +1,4 @@
-# Advent of Code 2023
+# Advent of Code
 
 This project uses the code in `main.py` to abstract away from the admin of getting and parsing the input for each puzzle, as well as then submitting the code.
 
