@@ -1,5 +1,4 @@
 import copy
-from textwrap import dedent
 
 
 sample_data = """seeds: 79 14 55 13
@@ -56,76 +55,106 @@ class Range(object):
             mapping.source_range_start,
             mapping.source_range_start + mapping.range_length - 1,
         )
-        print("Source range:", source_range)
+
         destination_range = (
             mapping.destination_range_start,
             mapping.destination_range_start + mapping.range_length - 1,
         )
-        print("Destination range:", destination_range)
 
-        self._subtract_from_range(source_range)
-        self._add_to_range(destination_range)
+        print("Source range:", source_range, "Destination range:", destination_range)
 
-    def _subtract_from_range(self, transform_range: tuple) -> None:
+        iter_range = copy.copy(self.working_range)
+        for segment in iter_range:
+            self._subtract_from_range(segment, source_range)
+            self._add_to_range(segment, destination_range)
+
+    def _subtract_from_range(self, start_range: tuple, transform_range: tuple) -> None:
         new_range = copy.copy(self.working_range)
-        for segment in self.working_range:
-            a = segment[0]
-            b = segment[1]
-            c = transform_range[0]
-            d = transform_range[1]
+        # for segment in self.working_range:
+        a = start_range[0]
+        b = start_range[1]
+        c = transform_range[0]
+        d = transform_range[1]
 
-            if a < c and d < b:
-                # Split segment into two by removing range from middle.
-                # New segments are (a, c-1) and (d+1, b)
-                new_range.remove(segment)
-                new_range.add(tuple((a, c - 1)))
-                new_range.add(tuple((d + 1, b)))
-            elif c < a and b < d:
-                # Completely remove segment from working range.
-                new_range.remove(segment)
-            elif b < d and a < c and c < b:
-                # Upper part of segment overlaps with lower part of transform.
-                # New segment is (a, c-1)
-                new_range.remove(segment)
-                new_range.add(tuple((a, c - 1)))
-            elif c < a and b < d and a < d:
-                # Lower part of segment overlaps with upper part of transform.
-                # New segment is (d+1, b)
-                new_range.remove(segment)
-                new_range.add(tuple((d + 1, b)))
+        print(f"Subtracting {transform_range} from segment", start_range)
 
-        self.working_range = new_range
-
-    def _add_to_range(self, transform_range: tuple) -> None:
-        new_range = copy.copy(self.working_range)
-        for segment in self.working_range:
-            a = segment[0]
-            b = segment[1]
-            c = transform_range[0]
-            d = transform_range[1]
-
-            if a < c and d < b:
-                # No change, transform sits within existing segment.
+        def remove():
+            try:
+                new_range.remove(start_range)
+            except KeyError:
                 pass
-            elif c < a and b < d:
-                # Replace segment with transfer, (c, d)
-                new_range.remove(segment)
-                new_range.add(tuple((c, d)))
-            elif b < d and a < c and c < b:
-                # Upper part of segment overlaps with lower part of transform.
-                # New segment is (a, d)
-                new_range.remove(segment)
-                new_range.add(tuple((a, d)))
-            elif c < a and b < d and a < d:
-                # Lower part of segment overlaps with upper part of transform.
-                # New segment is (c, b)
-                new_range.remove(segment)
-                new_range.add(tuple((c, b)))
-            else:
-                # If there is no overlap, just add the new segment.
-                new_range.add(tuple((c, d)))
 
-        self.working_range = new_range
+        if a <= c and d <= b:
+            # Split segment into two by removing range from middle.
+            # New segments are (a, c-1) and (d+1, b)
+            print("This is a split scenario")
+            remove()
+            new_range.add(tuple((a, c - 1)))
+            new_range.add(tuple((d + 1, b)))
+        elif c <= a and b <= d:
+            # Completely remove segment from working range.
+            print("Completely remove segment")
+            remove()
+        elif b <= d and a <= c and c <= b:
+            # Upper part of segment overlaps with lower part of transform.
+            # New segment is (a, c-1)
+            print("Upper part of segment overlaps with lower part of transform")
+            remove()
+            new_range.add(tuple((a, c - 1)))
+        elif c <= a and b <= d and a <= d:
+            # Lower part of segment overlaps with upper part of transform.
+            # New segment is (d+1, b)
+            print("Lower part of segment overlaps with upper part of transform")
+            remove()
+            new_range.add(tuple((d + 1, b)))
+        else:
+            print("No change")
+
+        self.working_range = set([r for r in new_range if r[0] <= r[1]])
+
+    def _add_to_range(self, start_range: tuple, transform_range: tuple) -> None:
+        new_range = copy.copy(self.working_range)
+        # for segment in self.working_range:
+        a = start_range[0]
+        b = start_range[1]
+        c = transform_range[0]
+        d = transform_range[1]
+
+        print(f"Adding {transform_range} to segment", start_range)
+
+        def remove():
+            try:
+                new_range.remove(start_range)
+            except KeyError:
+                pass
+
+        if a <= c and d <= b:
+            print("No change")
+            # No change, transform sits within existing segment.
+            pass
+        elif c <= a and b <= d:
+            # Replace segment with transfer, (c, d)
+            print("Replace segment with transform")
+            remove()
+            new_range.add(tuple((c, d)))
+        elif b <= d and a <= c and c <= b:
+            # Upper part of segment overlaps with lower part of transform.
+            # New segment is (a, d)
+            print("Upper part of segment overlaps with lower part of transform")
+            remove()
+            new_range.add(tuple((a, d)))
+        elif c <= a and b <= d and a <= d:
+            # Lower part of segment overlaps with upper part of transform.
+            # New segment is (c, b)
+            print("Lower part of segment overlaps with upper part of transform")
+            remove()
+            new_range.add(tuple((c, b)))
+        else:
+            # If there is no overlap, just add the new segment.
+            print("No overlap, just add new segment")
+            new_range.add(tuple((c, d)))
+
+        self.working_range = set([r for r in new_range if r[0] <= r[1]])
 
     def _consolidate_segments(self):
         consolidated_range = copy.copy(self.working_range)
@@ -208,15 +237,19 @@ def go(data):
     locations = []
 
     for pair in seed_pairs:
-        print("\nWorking on pair:", pair)
+        print("\n===========================")
+        print("Working on pair:", pair)
+        print("===========================")
+
         r = Range(start_value=pair[0], length=pair[1])
 
         current_position = "seed"
         while current_position != "location":
             for m in mappings[current_position]["maps"]:
-                print("\nBefore:", r.working_range, m.summary)
+                print("BEFORE:", r.working_range)
                 r.transform(mapping=m)
-                print("After:", r.working_range, "\n")
+                print("AFTER:", r.working_range)
+                print("===========================")
             current_position = mappings[current_position]["target"]
 
         print(r.working_range)
@@ -225,3 +258,11 @@ def go(data):
     answer = min(locations)
     print("\nANSWER:", answer)
     return answer
+    # test_range = Range(start_value=3, length=8)
+    # test_transform = Mapping(12, 3, 2)
+    # # Expected result: (3,10) -> (5,10),(12,13)
+    # print("Test range start:", test_range.working_range)
+
+    # test_range.transform(test_transform)
+
+    # print("Test range finish:", test_range.working_range)
