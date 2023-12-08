@@ -1,3 +1,4 @@
+import copy
 from enum import Enum
 
 
@@ -12,16 +13,16 @@ CARD_RANKINGS = {
     "A": 13,
     "K": 12,
     "Q": 11,
-    "J": 10,
-    "T": 9,
-    "9": 8,
-    "8": 7,
-    "7": 6,
-    "6": 5,
-    "5": 4,
-    "4": 3,
-    "3": 2,
-    "2": 1,
+    "T": 10,
+    "9": 9,
+    "8": 8,
+    "7": 7,
+    "6": 6,
+    "5": 5,
+    "4": 4,
+    "3": 3,
+    "2": 2,
+    "J": 1,
 }
 HAND_RANKINGS = {
     "five of a kind": 7,
@@ -48,12 +49,14 @@ class Hand(object):
     def __init__(self, cards: str, bid: int) -> None:
         self.cards = cards
         self.bid = bid
-        self.ranking: int
 
     @property
     def type(self) -> str:
-        type = None
-        unique_cards = set(self.cards)
+        type = ""
+
+        working_hand = copy.copy(self._joker_transform(self.cards))
+
+        unique_cards = set(working_hand)
 
         match len(unique_cards):
             case 1:
@@ -62,8 +65,8 @@ class Hand(object):
             case 2:
                 # Can be either four of a kind or full house.
                 if (
-                    self.cards.count(sorted(list(unique_cards))[0]) == 4
-                    or self.cards.count(sorted(list(unique_cards))[0]) == 1
+                    working_hand.count(sorted(list(unique_cards))[0]) == 4
+                    or working_hand.count(sorted(list(unique_cards))[0]) == 1
                 ):
                     type = HandTypes.four_of_a_kind.value
                 else:
@@ -71,7 +74,9 @@ class Hand(object):
             case 3:
                 # Can be either three of a kind or two pair.
                 counts = [
-                    self.cards.count(x) for x in unique_cards if len(unique_cards) == 3
+                    working_hand.count(x)
+                    for x in unique_cards
+                    if len(unique_cards) == 3
                 ]
                 if 3 in counts:
                     type = HandTypes.three_of_a_kind.value
@@ -84,7 +89,23 @@ class Hand(object):
                 # Can only be high card.
                 type = HandTypes.high_card.value
 
+        if self.cards != working_hand:
+            print(self.cards, " ---> ", working_hand, type)
+
         return type
+
+    def _joker_transform(self, cards: str) -> str:
+        transform = cards
+        if "J" in cards and cards.count("J") < 5:
+            # print(cards)
+            counts = {c: [] for c in range(1, len(cards) + 1)}
+            for card in cards:
+                if card not in counts[cards.count(card)] and card != "J":
+                    counts[cards.count(card)].append(card)
+            highest_value = max([x for x in counts.keys() if counts[x] != []])
+            transform = cards.replace("J", counts[highest_value][0])
+
+        return transform
 
 
 def go(data):
@@ -113,6 +134,10 @@ def go(data):
 
     for j, h in enumerate(sorted):
         answer += (len(sorted) - j) * h.bid
+        # print(h.type, h.cards)
+
+    if answer >= 253104988:
+        print("Too high")
 
     print("Answer:", answer)
 
