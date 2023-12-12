@@ -27,12 +27,15 @@ class Row(object):
 
             possible_arrangements.append(a)
 
-        arrangements = [
+        sub_arrangements = [
             a for a in possible_arrangements if self._is_valid_arrangement(a)
         ]
 
-        unfolded_groups = self.groups * 5
-        print(unfolded_groups)
+        # unfolded_groups = self.groups * 5
+        # print(unfolded_groups)
+
+        # unfolded_springs = (self.springs + "?") * 4 + self.springs
+        # print(unfolded_springs)
 
         unfolded_arrangements = []
         return unfolded_arrangements
