@@ -24,35 +24,41 @@ def can_convert_to_integer(value: any) -> bool:
         return False
 
 
-def get_adjacent_coordinates(coords: tuple, data: list[list]) -> list[tuple]:
-    ADJACENT_ADJUSTMENTS = [
-        (-1, -1),
-        (-1, 0),
-        (-1, 1),
-        (0, -1),
-        (0, 1),
-        (1, -1),
-        (1, 0),
-        (1, 1),
-    ]
+class Vector(object):
+    HORIZONTAL = [(-1, 0), (0, -1), (0, 1), (1, 0)]
+    DIAGONAL = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+    ADJACENT_ADJUSTMENTS = []
 
-    adj_coords = []
-    for c in coords:
+    def __init__(self, x: int, y: int) -> None:
+        self.x = x
+        self.y = y
+
+    def get_adjacent_coordinates(
+        self,
+        horizontal: bool = True,
+        diagonal: bool = True,
+    ) -> list:
+        if horizontal and diagonal:
+            ADJACENT_ADJUSTMENTS = self.HORIZONTAL + self.DIAGONAL
+        elif not diagonal:
+            ADJACENT_ADJUSTMENTS = self.HORIZONTAL
+        elif not horizontal:
+            ADJACENT_ADJUSTMENTS = self.DIAGONAL
+        else:
+            raise Exception(
+                "You must include at least horizontal or diagonal coordinates."
+            )
+
+        adj_coords = []
         for adj in ADJACENT_ADJUSTMENTS:
-            coord = (c[0] + adj[0], c[1] + adj[1])
-            if (
-                (not coord in coords)
-                and (not coord in adj_coords)
-                and (coord[0] >= 0)
-                and (coord[1] >= 0)
-                and (coord[0] < len(data))
-                and (coord[1] < len(data[0]))
-            ):
+            adj_x = self.x + adj[0]
+            adj_y = self.y + adj[1]
+            if (adj_x >= 0) and (adj_y >= 0):
+                coord = (adj_x, adj_y)
                 adj_coords.append(coord)
 
-    return adj_coords
+        return adj_coords
 
-
-class Vector(NamedTuple):
-    x: int
-    y: int
+    def move(self, adjustment_coords) -> tuple[int]:
+        self.x = self.x + adjustment_coords.x
+        self.y = self.y + adjustment_coords.y
