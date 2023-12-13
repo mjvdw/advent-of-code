@@ -11,34 +11,35 @@ sample_data = """???.### 1,1,3
 
 class Row(object):
     def __init__(self, springs: str, groups: list[int]) -> None:
-        self.springs = springs
-        self.groups = groups
+        if springs[:1] == "." and springs[:-1] == ".":
+            self.springs = ".?".join([springs] * 5)
+        else:
+            self.springs = "?".join([springs] * 5)
+        self.groups = groups * 5
 
     @property
-    def arrangements(self) -> list[str]:
-        possible_arrangements = []
+    def num_arrangements(self) -> list[str]:
+        # possible_arrangements = []
 
+        # sections = [s for s in self.springs.split(".") if s != ""]
+        # print(sections)
+        # print(self.groups)
+        count = 0
         num_unknowns = self.springs.count("?")
         products = itertools.product("#.", repeat=num_unknowns)
         for p in products:
             a = copy.copy(self.springs)
             for char in p:
                 a = a.replace("?", char, 1)
+            if self._is_valid_arrangement(a):
+                count += 1
 
-            possible_arrangements.append(a)
+            # possible_arrangements.append(a)
 
-        sub_arrangements = [
-            a for a in possible_arrangements if self._is_valid_arrangement(a)
-        ]
-
-        # unfolded_groups = self.groups * 5
-        # print(unfolded_groups)
-
-        # unfolded_springs = (self.springs + "?") * 4 + self.springs
-        # print(unfolded_springs)
-
-        unfolded_arrangements = []
-        return unfolded_arrangements
+        # arrangements = [
+        #     a for a in possible_arrangements if self._is_valid_arrangement(a)
+        # ]
+        return count
 
     def _is_valid_arrangement(self, arrangement: str) -> bool:
         groups = [a for a in arrangement.split(".") if a != ""]
@@ -60,8 +61,9 @@ def go(data):
         )
 
     answer = 0
-    for row in rows:
-        answer += len(row.arrangements)
+    for row in rows[1:]:
+        answer += row.num_arrangements
+        break
 
     print("Answer:", answer)
     return answer
