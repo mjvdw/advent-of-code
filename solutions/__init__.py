@@ -1,4 +1,9 @@
+import importlib
+
+
 def solve(year, day, data):
-    part_a = 111
-    part_b = 980
-    return part_a, part_b
+    mod_name = f"solutions.aoc{year}.day{day}"
+    mod = importlib.import_module(mod_name)
+    a = mod.part_a(data)
+    b = mod.part_b(data)
+    return a, b
