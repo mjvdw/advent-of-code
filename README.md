@@ -1,11 +1,10 @@
 # Advent of Code
 
-This project uses the code in `main.py` to abstract away from the admin of getting and parsing the input for each puzzle, as well as then submitting the code.
+This project uses the [AOCD](https://github.com/wimglenn/advent-of-code-data) and [advent-of-code-sample](https://github.com/wimglenn/advent-of-code-sample/blob/master/README.md) approach.
 
-To use this approach:
+Installation
 
-1. Create python files corresponding to the day and part you are working on in an appropriate year folder.
-   - This should be in the format `day_NNa.py` and in the relevant year folder.
-   - For example, day 3 part b would be `day_03b.py` and day 15 part a would be `day_15a.py`.
-2. You can run this working file through the automation using Click. Run `python3 main.py 2023 1a` to run your `day_01a.py` file for 2023 (for example).
-3. When you're ready to submit your answer, you can add the `--send=True` option to your command.
+1. Clone into this repo locally.
+2. `cd` into the folder and run `pip install .`.
+3. Write your code in the relevant year folder in the solution folder.
+4. Submit by running `aoc --years 2024 --days 1 2 3`.

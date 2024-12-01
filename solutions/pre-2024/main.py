@@ -10,7 +10,7 @@ load_dotenv()
 
 @click.command
 @click.argument("puzzle_code")
-@click.option("--year", default=2023, help="Which year's puzzles you are referencing")
+@click.option("--year", default=2024, help="Which year's puzzles you are referencing")
 @click.option("--send", default=False, help="Whether to submit the answer to AOCD")
 def run(puzzle_code: str, year: int, send: bool):
     day = int(puzzle_code[0:-1])
