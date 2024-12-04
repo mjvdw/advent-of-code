@@ -1,6 +1,3 @@
-from typing import NamedTuple
-
-
 def convert_to_2d_array(input: str):
     """Generate a 2-dimensional array from an input.
     Input must be a string, split by the `\n` character.
@@ -20,7 +17,7 @@ def can_convert_to_integer(value: any) -> bool:
     try:
         int(value)
         return True
-    except:
+    except ValueError:
         return False
 
 

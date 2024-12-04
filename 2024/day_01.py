@@ -51,6 +51,10 @@ test_data = """\
 """
 
 
+def go(data):
+    return part_b(data)
+
+
 if __name__ == "__main__":
     assert part_a(test_data) == 11
     assert part_b(test_data) == 31

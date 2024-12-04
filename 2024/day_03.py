@@ -49,6 +49,11 @@ test_data2 = """\
 xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))
 """
 
+
+def go(data):
+    return part_b(data)
+
+
 if __name__ == "__main__":
     # assert part_a(test_data) == 161
     # assert part_b(test_data2) == 48
