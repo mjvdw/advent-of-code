@@ -1,4 +1,5 @@
-from martyns_brain import Vector
+from martyns_brain import Vector, DIAGONAL_NEIGHBOURS
+from collections import defaultdict
 
 sample_data = """\
 MMMSXXMASM
@@ -16,22 +17,30 @@ MXMXAXMASX
 
 def go(data):
     data = [[*line] for line in data.splitlines()]
-    values = {}
+    values = defaultdict(str)
     for i, line in enumerate(data):
         for j, char in enumerate(line):
             values[Vector(i, j)] = char
 
     part1 = 0
-    xmas = "XMAS"
-    for x in dict(filter(lambda x: x[1] == xmas[0], values.items())):
-        for i, letter in enumerate(xmas[1:]):
-            i += 1
-            for direction in x.diagonal_neighbours():
-                if (x + (direction * i)) == xmas[i]:
-                    continue
+
+    for x in dict(filter(lambda x: x[1] == "x", values.items())):
+        print("Something")
+        part1 += find_xmas(x, DIAGONAL_NEIGHBOURS, values, "MAS")
+
     print(part1)
 
     return part1
+
+
+def find_xmas(vector, directions, values, xmas):
+    for i in range(1, len(xmas)):
+        valid_directions = []
+        for d in directions:
+            if (values[vector + (d * i)]) == xmas[i]:
+                valid_directions.append(d)
+
+    return 1
 
 
 if __name__ == "__main__":
