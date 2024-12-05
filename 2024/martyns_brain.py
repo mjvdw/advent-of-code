@@ -47,7 +47,7 @@ class Vector(NamedTuple):
         return [self + v for v in DIAGONAL_NEIGHBOURS]
 
 
-def get_bounds(vectors: Iterable[Vector]) -> (Vector, Vector):
+def get_bounds(vectors: Iterable[Vector]) -> tuple[Vector, Vector]:
     start = end = None
     for v in vectors:
         if start is None:
