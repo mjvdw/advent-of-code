@@ -1,6 +1,5 @@
 from aocd import get_data
-from collections import defaultdict
-from martyns_brain import Vector, get_bounds, print_grid
+from martyns_brain import Vector, get_bounds
 
 sample_data = """\
 ....#.....
