@@ -1,0 +1,14 @@
+{
+    "markdown.validate.enabled": true,
+    "python.analysis.exclude": [
+        "**/README.md",
+        "**/*.md"
+    ],
+    "python.analysis.ignore": [
+        "**/README.md",
+        "**/*.md"
+    ],
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}
