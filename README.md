@@ -15,11 +15,17 @@ This project uses the [AOCD](https://github.com/wimglenn/advent-of-code-data) an
 To run a specific day's solution:
 
 ```bash
-uv run python main.py <day> --year <year>
+uv run aoc-run <day> --year <year>
 ```
 
-Or use the `aoc` command:
+To submit your answer automatically:
 
 ```bash
-uv run aoc <day> --year <year> --send
+uv run aoc-run <day> --year <year> --send
+```
+
+Example:
+
+```bash
+uv run aoc-run 1 --year 2024
 ```
