@@ -38,6 +38,7 @@ def run(day: int, year: int, send: bool):
     answer = working.go(data)
 
     ####################################################################################
+    c.print(f"\n[bold blue]Test Answer:[/bold blue] {working.go(working.test_data)}")
     c.print(f"\n[bold green]Answer:[/bold green] {answer}\n")
     c.rule("Finished")
 
