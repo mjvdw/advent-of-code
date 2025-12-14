@@ -2,6 +2,7 @@ import os
 import importlib.util
 import sys
 import click
+import time
 from aocd import get_data, submit
 from rich.console import Console
 from dotenv import load_dotenv
@@ -35,12 +36,16 @@ def run(day: int, year: int, send: bool):
     sys.modules[f"day_{day:02d}"] = working
     spec.loader.exec_module(working)
 
-    answer = working.go(data)
-
     ####################################################################################
     c.print(f"\n[bold blue]Test Answer:[/bold blue] {working.go(working.test_data)}")
+
+    # Calculate Answer
+    start = time.perf_counter()
+    answer = working.go(data)
+    end = time.perf_counter()
+
     c.print(f"\n[bold green]Answer:[/bold green] {answer}\n")
-    c.rule("Finished")
+    c.rule(f"Finished in {end - start:.6f} seconds")
 
     if send:
         submit(year=year, day=day, answer=answer)
