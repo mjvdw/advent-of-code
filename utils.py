@@ -1,6 +1,3 @@
-import typing
-
-
 def convert_to_2d_array(input: str):
     """Generate a 2-dimensional array from an input.
     Input must be a string, split by the `\n` character.
