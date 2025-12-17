@@ -1,5 +1,4 @@
 from aocd import get_data
-import copy
 
 
 def parse_input(data: str) -> tuple[list, list]:
