@@ -30,6 +30,17 @@ class Vector(object):
         self.x = x
         self.y = y
 
+    def __repr__(self):
+        return f"({self.x}, {self.y})"
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
+    def __eq__(self, other):
+        if isinstance(other, Vector):
+            return self.x == other.x and self.y == other.y
+        return False
+
     def get_adjacent_coordinates(
         self,
         square: bool = True,
@@ -56,9 +67,9 @@ class Vector(object):
 
         return adj_coords
 
-    def move(self, adjustment_coords):
-        self.x = self.x + adjustment_coords.x
-        self.y = self.y + adjustment_coords.y
+    def move(self, adjustment_coords: tuple[int, int]):
+        self.x = self.x + adjustment_coords[0]
+        self.y = self.y + adjustment_coords[1]
 
 
 SQUARE_NEIGHBOURS = (

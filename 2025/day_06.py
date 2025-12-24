@@ -72,7 +72,7 @@ def part_b(data):
 
 
 # Import Data and Test Data
-data = get_data(year=2025, day=4)
+data = get_data(year=2025, day=6)
 
 test_data = """\
 123 328  51 64 
